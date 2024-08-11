@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import { getRandomWord } from './words'
 import axios from 'axios';
 
+
 const supabase = createClient('https://vyubgyowpwgtgeugaxpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5dWJneW93cHdndGdldWdheHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA4NjczOTAsImV4cCI6MjAzNjQ0MzM5MH0.e7cpX-k69e2sQSOVA4yaYjA74L9mApEA9Q-A_f3xM-Q')
 
 export interface Settings {
@@ -17,9 +18,6 @@ export interface Settings {
 export interface Stats {
   gamesPlayed: number
   gamesWon: number
-  currentStreak: number
-  maxStreak: number
-  guessDistribution: Record<number, number>
 }
 
 interface GameState {
@@ -32,11 +30,12 @@ interface GameState {
   stats: Stats
   addLetter: (letter: string) => void
   removeLetter: () => void
-  submitGuess: () => void
+  submitGuess: (showToast: (message: string) => void) => void
   newGame: () => void
   updateSettings: (newSettings: Partial<Settings>) => void
   updateStats: (gameState: 'won' | 'lost') => void
   fetchStats: () => Promise<void>
+  
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -74,21 +73,22 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ currentGuess: currentGuess.slice(0, -1) })
   },
 
-  submitGuess: async () => {
+  submitGuess: (showToast: (message: string) => void) => {
     const { currentGuess, guesses, solution, settings } = get()
     if (currentGuess.length !== 5) return
-
-    // Check if the word is valid (you need to implement this function)
+  
+    // Check if the word is valid
     if (!isValidWord(currentGuess)) {
-      // Show error message for invalid word
+      showToast("Not a valid word")
       return
     }
-
+  
     if (settings.hardMode && !isValidHardModeGuess(currentGuess, guesses, solution)) {
-      // Show error message for invalid hard mode guess
+      showToast("Must use revealed hints in Hard Mode")
       return
     }
-
+  
+  
     const newGuesses = [...guesses, currentGuess]
     const newUsedLetters = { ...get().usedLetters }
 
@@ -107,23 +107,23 @@ export const useGameStore = create<GameState>((set, get) => ({
     })
 
     let newGameState: 'playing' | 'won' | 'lost' = 'playing'
-    if (currentGuess === solution) {
-      newGameState = 'won'
-    } else if (newGuesses.length === 6) {
-      newGameState = 'lost'
-    }
+  if (currentGuess === solution) {
+    newGameState = 'won'
+  } else if (newGuesses.length >= 6) {
+    newGameState = 'lost'
+  }
 
-    set({
-      guesses: newGuesses,
-      currentGuess: '',
-      gameState: newGameState,
-      usedLetters: newUsedLetters,
-    })
+  set({
+    guesses: newGuesses,
+    currentGuess: '',
+    gameState: newGameState,
+    usedLetters: newUsedLetters,
+  })
 
-    if (newGameState !== 'playing') {
-      await get().updateStats(newGameState)
-    }
-  },
+  if (newGameState !== 'playing') {
+    get().updateStats(newGameState)
+  }
+},
 
   newGame: () => {
     set((state) => ({
@@ -142,58 +142,42 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   updateStats: async (gameState: 'won' | 'lost') => {
-    const { stats, guesses } = get()
+    const { stats } = get()
     const { data, error } = await supabase
       .from('user_stats')
       .upsert({
         user_id: 'current_user_id',
         games_played: stats.gamesPlayed + 1,
         games_won: gameState === 'won' ? stats.gamesWon + 1 : stats.gamesWon,
-        current_streak: gameState === 'won' ? stats.currentStreak + 1 : 0,
-        max_streak: gameState === 'won' 
-          ? Math.max(stats.maxStreak, stats.currentStreak + 1)
-          : stats.maxStreak,
-        guess_distribution: gameState === 'won'
-          ? {
-              ...stats.guessDistribution,
-              [guesses.length.toString()]: (stats.guessDistribution[guesses.length] || 0) + 1
-            }
-          : stats.guessDistribution
       }, {
         onConflict: 'user_id'
       })
       .select()
-
+  
     if (error) {
       console.error('Error updating stats:', error)
     } else if (data) {
       const newStats: Stats = {
         gamesPlayed: data[0].games_played,
         gamesWon: data[0].games_won,
-        currentStreak: data[0].current_streak,
-        maxStreak: data[0].max_streak,
-        guessDistribution: data[0].guess_distribution
       }
       set({ stats: newStats })
     }
   },
-
+  
   fetchStats: async () => {
     const { data, error } = await supabase
       .from('user_stats')
       .select('*')
       .eq('user_id', 'current_user_id')
       .single()
-
+  
     if (error) {
       console.error('Error fetching stats:', error)
     } else if (data) {
       const fetchedStats: Stats = {
         gamesPlayed: data.games_played,
         gamesWon: data.games_won,
-        currentStreak: data.current_streak,
-        maxStreak: data.max_streak,
-        guessDistribution: data.guess_distribution
       }
       set({ stats: fetchedStats })
     }

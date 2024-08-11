@@ -1,34 +1,39 @@
 // components/Timer.tsx
-import { useState, useEffect } from 'react'
-import { useGameStore } from '@/lib/store'
+import React, { useEffect, useState } from 'react';
 
-export function Timer() {
-  const [timeLeft, setTimeLeft] = useState(300) // 5 minutes
-  const { gameState } = useGameStore()
+interface TimerProps {
+  isGameOver: boolean;
+  timerKey: number;
+  onTimeOut: () => void;
+}
+
+const Timer: React.FC<TimerProps> = ({ isGameOver, timerKey, onTimeOut }) => {
+  const [timeLeft, setTimeLeft] = useState(150);
 
   useEffect(() => {
-    if (gameState !== 'playing') return
+    if (isGameOver) return;
 
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 0) {
-          clearInterval(timer)
-          // Handle time's up scenario
-          return 0
-        }
-        return prevTime - 1
-      })
-    }, 1000)
+    if (timeLeft === 0) {
+      onTimeOut();
+      return;
+    }
 
-    return () => clearInterval(timer)
-  }, [gameState])
+    const intervalId = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
 
-  const minutes = Math.floor(timeLeft / 60)
-  const seconds = timeLeft % 60
+    return () => clearInterval(intervalId);
+  }, [timeLeft, isGameOver, onTimeOut]);
+
+  useEffect(() => {
+    setTimeLeft(150); // Reset timer to 150 seconds when game restarts
+  }, [timerKey]);
 
   return (
-    <div className="text-xl font-bold">
-      {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
+    <div className="text-xl mb-4">
+      Time left: {timeLeft}s
     </div>
-  )
-}
+  );
+};
+
+export default Timer;
