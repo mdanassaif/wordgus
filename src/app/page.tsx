@@ -1,3 +1,4 @@
+// app/page.tsx
 "use client"
 import { useState, useEffect } from 'react'
 import { GameBoard } from '@/components/GameBoard'
@@ -7,6 +8,7 @@ import { GameOverModal } from '@/components/GameOverModal'
 import { SettingsModal } from '@/components/SettingsModal'
 import { StatsModal } from '@/components/StatsModal'
 import { HelpModal } from '@/components/HelpModal'
+import { BackgroundMusic } from '@/components/BackgroundMusic'
 import { useGameStore } from '@/lib/store'
 import { Toast } from '@/components/Toast'
 
@@ -24,13 +26,17 @@ export default function Home() {
     settings,
     updateSettings,
     stats,
-    updateStats
+    fetchStats
   } = useGameStore()
 
   const [showSettings, setShowSettings] = useState(false)
   const [showStats, setShowStats] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetchStats()
+  }, [fetchStats])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -43,6 +49,7 @@ export default function Home() {
         addLetter(event.key.toUpperCase())
       }
     }
+
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [gameState, submitGuess, removeLetter, addLetter])
@@ -60,7 +67,6 @@ export default function Home() {
 
   const handleNewGame = () => {
     newGame()
-    updateStats(gameState)
   }
 
   const showToast = (message: string) => {
@@ -110,6 +116,7 @@ export default function Home() {
         onClose={() => setShowHelp(false)}
       />
       {toast && <Toast message={toast} />}
+      <BackgroundMusic />
     </main>
   )
 }

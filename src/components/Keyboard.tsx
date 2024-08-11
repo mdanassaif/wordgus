@@ -1,3 +1,4 @@
+// components/Keyboard.tsx
 import { Button } from "@/components/ui/button"
 
 const KEYS = [
@@ -14,11 +15,10 @@ interface KeyboardProps {
   settings: Settings
 }
 
-export function Keyboard({  onKeyPress, usedLetters, settings  }: KeyboardProps) {
+export function Keyboard({ onKeyPress, usedLetters, settings }: KeyboardProps) {
   const getKeyStyle = (key: string) => {
-    const baseStyle = "font-bold text-sm sm:text-base transition-colors duration-300 min-w-[2rem] sm:min-w-[2.5rem]"
-    if (key === 'ENTER' || key === '⌫') return `${baseStyle} bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-2 sm:px-3`
-    
+    const baseStyle = "font-bold text-sm sm:text-base transition-colors duration-300 h-10 sm:h-12"
+    if (key === 'ENTER' || key === '⌫') return `${baseStyle} bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-2 sm:px-3 flex-grow`
     switch (usedLetters[key]) {
       case 'correct': return `${baseStyle} bg-green-500 text-white`
       case 'present': return `${baseStyle} bg-yellow-500 text-white`
@@ -28,13 +28,13 @@ export function Keyboard({  onKeyPress, usedLetters, settings  }: KeyboardProps)
   }
 
   return (
-    <div className="mt-4 max-w-lg mx-auto">
+    <div className="mt-4 max-w-lg mx-auto px-2">
       {KEYS.map((row, rowIndex) => (
         <div key={rowIndex} className="flex justify-center mb-2 gap-1 sm:gap-2">
           {row.map((key) => (
             <Button
               key={key}
-              className={getKeyStyle(key)}
+              className={`${getKeyStyle(key)} ${key === 'ENTER' || key === '⌫' ? 'flex-grow' : 'flex-1'}`}
               onClick={() => onKeyPress(key === '⌫' ? 'BACKSPACE' : key)}
             >
               {key}

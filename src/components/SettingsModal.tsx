@@ -1,3 +1,4 @@
+// components/SettingsModal.tsx
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -40,6 +41,14 @@ export function SettingsModal({ isOpen, onClose, settings, onUpdateSettings }: S
               id="color-blind-mode"
               checked={settings.colorBlindMode}
               onCheckedChange={(checked) => onUpdateSettings({ colorBlindMode: checked })}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="music-mode">Music</Label>
+            <Switch
+              id="music-mode"
+              checked={settings.musicOn}
+              onCheckedChange={(checked) => onUpdateSettings({ musicOn: checked })}
             />
           </div>
         </div>

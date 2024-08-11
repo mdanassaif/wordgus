@@ -17,7 +17,7 @@ export function BackgroundMusic() {
   return (
     <audio
       ref={audioRef}
-      src="/path-to-your-background-music.mp3"
+      src="/videobg.mp3"
       loop
     />
   )
