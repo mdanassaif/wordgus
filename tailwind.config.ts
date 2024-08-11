@@ -16,12 +16,19 @@ const config: Config = {
         bounce: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
-        }
+        },
+        rotateIn: {
+          '0%': { transform: 'rotateY(-90deg)', opacity: '0' },
+          '100%': { transform: 'rotateY(0)', opacity: '1' },
+        },
+        colorChange: {
+          '0%, 100%': { color: 'inherit' },
+          '50%': { color: '#8B5CF6' },
+        },
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     },
   },

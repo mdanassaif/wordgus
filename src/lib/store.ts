@@ -5,7 +5,10 @@ import { getRandomWord } from './words'
 import axios from 'axios';
 
 
-const supabase = createClient('https://vyubgyowpwgtgeugaxpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5dWJneW93cHdndGdldWdheHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA4NjczOTAsImV4cCI6MjAzNjQ0MzM5MH0.e7cpX-k69e2sQSOVA4yaYjA74L9mApEA9Q-A_f3xM-Q')
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+)
 
 export interface Settings {
   hardMode: boolean

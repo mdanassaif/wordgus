@@ -1,4 +1,3 @@
-// components/GameBoard.tsx
 import { motion } from 'framer-motion'
 import { Settings } from '@/lib/store'
 
@@ -14,7 +13,7 @@ export function GameBoard({ guesses, currentGuess, solution, settings }: GameBoa
   const boardState = [...guesses, currentGuess, ...Array.from({ length: emptyRows }, () => '')]
 
   const getTileColor = (letter: string, index: number, row: number) => {
-    if (row >= guesses.length) return 'bg-gray-200 dark:bg-gray-700 text-[hsl(var(--text-color))]'
+    if (row >= guesses.length) return 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
     if (letter === solution[index]) return settings.colorBlindMode ? 'bg-blue-500 text-white' : 'bg-green-500 text-white'
     if (solution.includes(letter)) return settings.colorBlindMode ? 'bg-orange-500 text-white' : 'bg-yellow-500 text-white'
     return 'bg-gray-400 dark:bg-gray-600 text-white'
