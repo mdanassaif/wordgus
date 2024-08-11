@@ -3,12 +3,12 @@ import { persist } from 'zustand/middleware'
 import { getRandomWord } from './words'
 
 export interface Settings {
-    hardMode: boolean
-    darkMode: boolean
-    colorBlindMode: boolean
-    musicOn: boolean  // New setting for music
-    difficulty: 'easy' | 'medium' | 'hard'
-  }
+  hardMode: boolean
+  darkMode: boolean
+  colorBlindMode: boolean
+  musicOn: boolean
+  difficulty: 'easy' | 'medium' | 'hard'
+}
 
 export interface Stats {
   gamesPlayed: number
@@ -42,11 +42,12 @@ export const useGameStore = create<GameState>()(
       currentGuess: '',
       gameState: 'playing',
       usedLetters: {},
+      
       settings: {
         hardMode: false,
         darkMode: false,
         colorBlindMode: false,
-        musicOn: false,  // Default to off
+        musicOn: false,
         difficulty: 'medium',
       },
       stats: {
@@ -122,7 +123,6 @@ export const useGameStore = create<GameState>()(
           usedLetters: {},
         }))
       },
-      
 
       updateSettings: (newSettings) => {
         set((state) => ({

@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useEffect } from 'react'
 import { GameBoard } from '@/components/GameBoard'
 import { Keyboard } from '@/components/Keyboard'
@@ -12,10 +11,10 @@ import { useGameStore } from '@/lib/store'
 import { Toast } from '@/components/Toast'
 
 export default function Home() {
-  const { 
-    guesses, 
-    currentGuess, 
-    gameState, 
+  const {
+    guesses,
+    currentGuess,
+    gameState,
     solution,
     usedLetters,
     addLetter,
@@ -44,7 +43,6 @@ export default function Home() {
         addLetter(event.key.toUpperCase())
       }
     }
-
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [gameState, submitGuess, removeLetter, addLetter])
@@ -72,29 +70,28 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-4 sm:p-24 font-sans">
-      <Header 
+      <Header
         onOpenSettings={() => setShowSettings(true)}
         onOpenStats={() => setShowStats(true)}
         onOpenHelp={() => setShowHelp(true)}
       />
-      <GameBoard 
-        guesses={guesses} 
-        currentGuess={currentGuess} 
-        solution={solution} 
+      <GameBoard
+        guesses={guesses}
+        currentGuess={currentGuess}
+        solution={solution}
         settings={settings}
       />
-      <Keyboard 
-        onKeyPress={handleKeyPress} 
+      <Keyboard
+        onKeyPress={handleKeyPress}
         usedLetters={usedLetters}
         settings={settings}
       />
       {gameState !== 'playing' && (
-        <GameOverModal 
-          gameState={gameState} 
-          solution={solution} 
-          guesses={guesses} 
+        <GameOverModal
+          gameState={gameState}
+          solution={solution}
+          guesses={guesses}
           onNewGame={handleNewGame}
-          stats={stats}
         />
       )}
       <SettingsModal
