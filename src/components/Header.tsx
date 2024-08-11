@@ -15,7 +15,7 @@ export function Header({ onOpenSettings, onOpenStats, onOpenHelp }: HeaderProps)
       <Button variant="ghost" size="icon" onClick={onOpenHelp}>
         <HelpCircle className="h-6 w-6" />
       </Button>
-      <h1 className="text-3xl font-bold">Wordle</h1>
+      <h1 className="text-3xl font-bold">WordGus</h1>
       <div className="flex space-x-2">
         <Button variant="ghost" size="icon" onClick={onOpenStats}>
           <BarChart className="h-6 w-6" />
