@@ -2,6 +2,7 @@
 import { create } from 'zustand'
 import { createClient } from '@supabase/supabase-js'
 import { getRandomWord } from './words'
+import axios from 'axios';
 
 const supabase = createClient('https://vyubgyowpwgtgeugaxpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5dWJneW93cHdndGdldWdheHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA4NjczOTAsImV4cCI6MjAzNjQ0MzM5MH0.e7cpX-k69e2sQSOVA4yaYjA74L9mApEA9Q-A_f3xM-Q')
 
@@ -140,27 +141,39 @@ export const useGameStore = create<GameState>((set, get) => ({
     }))
   },
 
-  updateStats: async (gameState) => {
-    const { stats } = get()
-    const newStats = { ...stats }
-    newStats.gamesPlayed++
-    if (gameState === 'won') {
-      newStats.gamesWon++
-      newStats.currentStreak++
-      newStats.maxStreak = Math.max(newStats.currentStreak, newStats.maxStreak)
-      newStats.guessDistribution[get().guesses.length]++
-    } else if (gameState === 'lost') {
-      newStats.currentStreak = 0
-    }
-
-    // Update stats in Supabase
+  updateStats: async (gameState: 'won' | 'lost') => {
+    const { stats, guesses } = get()
     const { data, error } = await supabase
       .from('user_stats')
-      .upsert({ user_id: 'current_user_id', stats: newStats })
+      .upsert({
+        user_id: 'current_user_id',
+        games_played: stats.gamesPlayed + 1,
+        games_won: gameState === 'won' ? stats.gamesWon + 1 : stats.gamesWon,
+        current_streak: gameState === 'won' ? stats.currentStreak + 1 : 0,
+        max_streak: gameState === 'won' 
+          ? Math.max(stats.maxStreak, stats.currentStreak + 1)
+          : stats.maxStreak,
+        guess_distribution: gameState === 'won'
+          ? {
+              ...stats.guessDistribution,
+              [guesses.length.toString()]: (stats.guessDistribution[guesses.length] || 0) + 1
+            }
+          : stats.guessDistribution
+      }, {
+        onConflict: 'user_id'
+      })
+      .select()
 
     if (error) {
       console.error('Error updating stats:', error)
-    } else {
+    } else if (data) {
+      const newStats: Stats = {
+        gamesPlayed: data[0].games_played,
+        gamesWon: data[0].games_won,
+        currentStreak: data[0].current_streak,
+        maxStreak: data[0].max_streak,
+        guessDistribution: data[0].guess_distribution
+      }
       set({ stats: newStats })
     }
   },
@@ -168,14 +181,21 @@ export const useGameStore = create<GameState>((set, get) => ({
   fetchStats: async () => {
     const { data, error } = await supabase
       .from('user_stats')
-      .select('stats')
+      .select('*')
       .eq('user_id', 'current_user_id')
       .single()
 
     if (error) {
       console.error('Error fetching stats:', error)
     } else if (data) {
-      set({ stats: data.stats })
+      const fetchedStats: Stats = {
+        gamesPlayed: data.games_played,
+        gamesWon: data.games_won,
+        currentStreak: data.current_streak,
+        maxStreak: data.max_streak,
+        guessDistribution: data.guess_distribution
+      }
+      set({ stats: fetchedStats })
     }
   },
 }))
@@ -203,8 +223,19 @@ function isValidHardModeGuess(guess: string, previousGuesses: string[], solution
   return true
 }
 
-function isValidWord(word: string): boolean {
-  // Implement word validation logic here
-  // You can use an API or a local dictionary to check if the word is valid
-  return true // Placeholder implementation
+async function isValidWord(word: string): Promise<boolean> {
+  try {
+    const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+    return response.status === 200;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      // If the API returns a 404, it means the word was not found
+      if (error.response.status === 404) {
+        return false;
+      }
+    }
+    // For any other errors, log them and return false
+    console.error('Error checking word validity:', error);
+    return false;
+  }
 }
