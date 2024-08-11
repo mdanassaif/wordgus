@@ -20,7 +20,7 @@ interface KeyboardProps {
 
 export function Keyboard({ onKeyPress, usedLetters, settings, onHint, hintsLeft }: KeyboardProps) {
   const getKeyStyle = (key: string) => {
-    const baseStyle = "font-bold text-sm sm:text-base transition-all duration-300 rounded-2xl shadow-lg active:shadow-inner active:translate-y-0.5 backdrop-blur-sm";
+    const baseStyle = "font-bold text-xs sm:text-sm md:text-base transition-all duration-300 rounded-lg sm:rounded-xl shadow-md active:shadow-inner active:translate-y-0.5";
     
     switch (usedLetters[key]) {
       case 'correct': return `${baseStyle} bg-gradient-to-br from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white`;
@@ -30,33 +30,33 @@ export function Keyboard({ onKeyPress, usedLetters, settings, onHint, hintsLeft 
     }
   };
 
-  const specialButtonStyle = "font-bold text-sm sm:text-base transition-all duration-300 rounded-2xl shadow-lg active:shadow-inner active:translate-y-0.5 backdrop-blur-sm";
+  const specialButtonStyle = "font-bold text-xs sm:text-sm md:text-base transition-all duration-300 rounded-lg sm:rounded-xl shadow-md active:shadow-inner active:translate-y-0.5";
 
   return (
-    <div className="w-full max-w-lg mx-auto px-2 sm:px-4 mt-6">
-      <div className="flex justify-between mb-4 gap-2">
+    <div className="w-full max-w-lg mx-auto px-1 sm:px-2 md:px-4 mt-3 sm:mt-4 md:mt-6">
+      <div className="flex justify-between mb-2 sm:mb-3 md:mb-4 gap-1 sm:gap-2">
         <Button
           className={`${specialButtonStyle} bg-gradient-to-br from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white flex-grow`}
           onClick={() => onKeyPress('ENTER')}
         >
-          <CornerDownLeft className="h-5 w-5 mr-1" /> Enter
+          <CornerDownLeft className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 mr-1" /> Enter
         </Button>
         <Button
           className={`${specialButtonStyle} bg-gradient-to-br from-purple-400 to-purple-600 hover:from-purple-500 hover:to-purple-700 text-white flex-grow`}
           onClick={() => onHint()}
           disabled={hintsLeft <= 0}
         >
-          <Lightbulb className="h-5 w-5 mr-1" /> Hint ({hintsLeft})
+          <Lightbulb className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 mr-1" /> Hint ({hintsLeft})
         </Button>
         <Button
           className={`${specialButtonStyle} bg-gradient-to-br from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white flex-grow`}
           onClick={() => onKeyPress('BACKSPACE')}
         >
-          <Delete className="h-5 w-5 mr-1" /> Remove
+          <Delete className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 mr-1" /> Remove
         </Button>
       </div>
       {KEYS.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex justify-center mb-2 sm:mb-3 gap-1.5 sm:gap-2">
+        <div key={rowIndex} className="flex justify-center mb-1 sm:mb-2 gap-0.5 sm:gap-1 md:gap-1.5">
           {row.map((key) => (
             <Button
               key={key}
@@ -64,8 +64,8 @@ export function Keyboard({ onKeyPress, usedLetters, settings, onHint, hintsLeft 
               onClick={() => onKeyPress(key)}
               style={{
                 flex: 1,
-                minWidth: '32px',
-                height: '56px',
+                minWidth: '24px',
+                height: '40px',
                 padding: '0',
               }}
             >
