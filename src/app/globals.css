@@ -4,8 +4,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
 body {
   font-family: 'Poppins', sans-serif;
 }
@@ -34,14 +32,15 @@ body {
 
     --text-color: 222 84% 4.9%;
     --bg-color: 0 0% 100%;
+    --header-icon-color: 222 84% 4.9%;
   }
 
   .dark {
-    --background: 222 84% 4.9%;
+    --background: 222 47.4% 11.2%;
     --foreground: 210 40% 98%;
-    --card: 222 84% 4.9%;
+    --card: 222 47.4% 11.2%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 84% 4.9%;
+    --popover: 222 47.4% 11.2%;
     --popover-foreground: 210 40% 98%;
     --primary: 210 40% 98%;
     --primary-foreground: 222 47.4% 11.2%;
@@ -58,7 +57,8 @@ body {
     --ring: 212.7 26.8% 83.9%;
 
     --text-color: 210 40% 98%;
-    --bg-color: 222 84% 4.9%;
+    --bg-color: 222 47.4% 11.2%;
+    --header-icon-color: 210 40% 98%;
   }
 }
 
@@ -68,16 +68,19 @@ body {
 
 @layer utilities {
   .bg-primary {
-    @apply bg-[rgb(var(--primary-color))];
+    @apply bg-[hsl(var(--primary))];
   }
   .bg-secondary {
-    @apply bg-[rgb(var(--secondary-color))];
+    @apply bg-[hsl(var(--secondary))];
   }
   .text-primary {
-    @apply text-[rgb(var(--primary-color))];
+    @apply text-[hsl(var(--primary))];
   }
   .text-secondary {
-    @apply text-[rgb(var(--secondary-color))];
+    @apply text-[hsl(var(--secondary))];
+  }
+  .header-icon {
+    @apply text-[hsl(var(--header-icon-color))];
   }
 }
 
