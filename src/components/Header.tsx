@@ -2,7 +2,8 @@
 import React from 'react';
 import { ThemeToggle } from './ThemeToggle'
 import { Button } from './ui/button'
-import { BarChart, HelpCircle, Music } from 'lucide-react'
+import { ChartNoAxesCombined, HelpCircle, Music } from 'lucide-react'
+import { motion } from 'framer-motion';
 
 interface HeaderProps {
   onOpenStats: () => void
@@ -12,50 +13,75 @@ interface HeaderProps {
 }
 
 export function Header({ onOpenStats, onOpenHelp, onToggleMusic, musicOn }: HeaderProps) {
+  const title = "WordGus"
+
   return (
-    <header className="w-full max-w-4xl mx-auto flex flex-wrap justify-between items-center py-2 px-3 sm:py-4 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+    <motion.header 
+      className="w-full max-w-4xl mx-auto flex flex-wrap justify-between items-center py-2 px-3 sm:py-4 sm:px-6 border-b border-gray-200 dark:border-gray-700"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="flex items-center space-x-2 sm:space-x-4 mb-2 sm:mb-0">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={onOpenHelp} 
-          className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-all duration-300 hover:rotate-12"
-        >
-          <HelpCircle className="h-4 w-4 sm:h-5 sm:w-5" />
-        </Button>
+        <motion.div whileHover={{ rotate: 180 }} whileTap={{ scale: 0.9 }}>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={onOpenHelp} 
+            className="text-gray-300 hover:text-pink-500 dark:text-gray-200 dark:hover:text-white transition-all duration-300"
+          >
+            <HelpCircle className="h-4 w-4 sm:h-5 sm:w-5" />
+          </Button>
+        </motion.div>
         <h1 className="text-2xl sm:text-4xl font-extrabold font-sans whitespace-nowrap">
-          <span className="inline-block animate-bounce-slow">W</span>
-          <span className="inline-block animate-bounce-slow animation-delay-100">o</span>
-          <span className="inline-block animate-bounce-slow animation-delay-200">r</span>
-          <span className="inline-block animate-bounce-slow animation-delay-300">d</span>
-          <span className="inline-block animate-bounce-slow animation-delay-400 text-purple-500">G</span>
-          <span className="inline-block animate-bounce-slow animation-delay-500 text-pink-500">u</span>
-          <span className="inline-block animate-bounce-slow animation-delay-600 text-purple-500">s</span>
+          {title.split('').map((letter, index) => (
+            <motion.span
+              key={index}
+              className="inline-block"
+              style={{
+                color: `hsl(${index * 360 / title.length}, 70%, 70%)`,
+                textShadow: '0 0 10px rgba(255,255,255,0.3)'
+              }}
+              animate={{ y: [0, -5, 0] }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+                repeatType: 'loop',
+                delay: index * 0.1,
+              }}
+            >
+              {letter}
+            </motion.span>
+          ))}
         </h1>
       </div>
       <div className="flex items-center space-x-2 sm:space-x-3">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={onOpenStats} 
-          className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-all duration-300 hover:scale-110"
-        >
-          <BarChart className="h-4 w-4 sm:h-5 sm:w-5" />
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={onToggleMusic} 
-          className={`transition-all duration-300 hover:scale-110 ${
-            musicOn 
-              ? 'text-green-500 hover:text-green-600 animate-bounce' 
-              : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
-          }`}
-        >
-          <Music className="h-4 w-4 sm:h-5 sm:w-5" />
-        </Button>
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={onOpenStats} 
+            className="text-gray-300 hover:text-pink-500 dark:text-gray-200 dark:hover:text-white transition-all duration-300"
+          >
+            <ChartNoAxesCombined className="h-4 w-4 sm:h-5 sm:w-5" />
+          </Button>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={onToggleMusic} 
+            className={`transition-all duration-300 ${
+              musicOn 
+                ? 'text-green-500 hover:text-green-600' 
+                : 'text-gray-300 hover:text-pink-500 dark:text-gray-200 dark:hover:text-white'
+            }`}
+          >
+            <Music className={`h-4 w-4 sm:h-5 sm:w-5 ${musicOn ? 'animate-bounce' : ''}`} />
+          </Button>
+        </motion.div>
         <ThemeToggle />
       </div>
-    </header>
+    </motion.header>
   )
 }

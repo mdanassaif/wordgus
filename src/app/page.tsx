@@ -1,6 +1,6 @@
 // app/page.tsx
 "use client"
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { GameBoard } from '@/components/GameBoard'
 import { Keyboard } from '@/components/Keyboard'
 import { Header } from '@/components/Header'
@@ -11,6 +11,7 @@ import { BackgroundMusic } from '@/components/BackgroundMusic'
 import { useGameStore } from '@/lib/store'
 import { Toast } from '@/components/Toast'
 import Timer from '@/components/Timer'
+import { LandingPage } from '@/components/LandingPage'
 
 export default function Home() {
   const {
@@ -29,6 +30,7 @@ export default function Home() {
     fetchStats
   } = useGameStore()
 
+  const [gameStarted, setGameStarted] = useState(false)
   const [showStats, setShowStats] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
@@ -36,7 +38,7 @@ export default function Home() {
   const [hintsLeft, setHintsLeft] = useState(2)
   const [timerStarted, setTimerStarted] = useState(false)
 
-  const handleHint = () => {
+  const handleHint = useCallback(() => {
     if (hintsLeft > 0) {
       const unrevealedLetters = solution.split('').filter((letter, index) => 
         !guesses.some(guess => guess[index] === letter)
@@ -44,24 +46,46 @@ export default function Home() {
       if (unrevealedLetters.length > 0) {
         const hintLetter = unrevealedLetters[Math.floor(Math.random() * unrevealedLetters.length)]
         addLetter(hintLetter)
-        setHintsLeft(hintsLeft - 1)
+        setHintsLeft(prevHints => prevHints - 1)
       }
     }
-  }
+  }, [hintsLeft, solution, guesses, addLetter])
 
-  const handleNewGame = () => {
+  const handleNewGame = useCallback(() => {
     newGame()
     setTimerKey(prev => prev + 1)
     setHintsLeft(2)
     setTimerStarted(false)
-  }
+  }, [newGame])
 
-  const handleTimeOut = () => {
+  const handleTimeOut = useCallback(() => {
     if (gameState === 'playing') {
       showToast("Time's up!")
       useGameStore.setState({ gameState: 'lost' })
     }
-  }
+  }, [gameState])
+
+  const showToast = useCallback((message: string) => {
+    setToast(message)
+    setTimeout(() => setToast(null), 3000)
+  }, [])
+
+  const handleSubmitGuess = useCallback(() => {
+    submitGuess((message) => {
+      showToast(message)
+      if (guesses.length === 5 && currentGuess.length === 5) {
+        // This is the last possible guess
+        setTimeout(() => {
+          if (currentGuess !== solution) {
+            useGameStore.setState({ gameState: 'lost' })
+          }
+        }, 500) // Delay to allow for the last guess to be processed
+      }
+    })
+    if (!timerStarted) {
+      setTimerStarted(true)
+    }
+  }, [submitGuess, guesses, currentGuess, solution, timerStarted])
 
   useEffect(() => {
     fetchStats()
@@ -71,10 +95,7 @@ export default function Home() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (gameState !== 'playing') return
       if (event.key === 'Enter') {
-        submitGuess(showToast)
-        if (!timerStarted) {
-          setTimerStarted(true)
-        }
+        handleSubmitGuess()
       } else if (event.key === 'Backspace') {
         removeLetter()
       } else if (/^[A-Za-z]$/.test(event.key)) {
@@ -84,25 +105,26 @@ export default function Home() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [gameState, submitGuess, removeLetter, addLetter, timerStarted])
+  }, [gameState, handleSubmitGuess, removeLetter, addLetter])
 
-  const handleKeyPress = (key: string) => {
+  const handleKeyPress = useCallback((key: string) => {
     if (gameState !== 'playing') return
     if (key === 'ENTER') {
-      submitGuess(showToast)
-      if (!timerStarted) {
-        setTimerStarted(true)
-      }
+      handleSubmitGuess()
     } else if (key === 'BACKSPACE') {
       removeLetter()
     } else {
       addLetter(key)
     }
-  }
+  }, [gameState, handleSubmitGuess, removeLetter, addLetter])
 
-  const showToast = (message: string) => {
-    setToast(message)
-    setTimeout(() => setToast(null), 3000)
+  const startGame = useCallback(() => {
+    setGameStarted(true)
+    setTimerStarted(true)
+  }, [])
+
+  if (!gameStarted) {
+    return <LandingPage onStartGame={startGame} />
   }
 
   return (

@@ -25,7 +25,7 @@ export function GameOverModal({ gameState, solution, guesses, onNewGame }: GameO
 
   return (
     <Dialog open={isGameOver}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] text-white">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white dark:text-white">
             {gameState === 'won' ? 'Congratulations!' : 'Game Over'}

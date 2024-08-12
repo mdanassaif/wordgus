@@ -9,7 +9,7 @@ const roboto = Roboto({
 })
 
 export const metadata = {
-  title: 'Enhanced Wordle',
+  title: 'WordGus',
   description: 'A modern Wordle clone built with Next.js and shadcn/ui',
 }
 

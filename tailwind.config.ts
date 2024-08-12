@@ -11,6 +11,9 @@ const config: Config = {
     extend: {
       animation: {
         'bounce-slow': 'bounce 2s infinite',
+        'float': 'float 3s ease-in-out infinite',
+        'float-slow': 'float 6s ease-in-out infinite',
+        'spin-slow': 'spin 6s linear infinite',
       },
       keyframes: {
         bounce: {
@@ -25,10 +28,18 @@ const config: Config = {
           '0%, 100%': { color: 'inherit' },
           '50%': { color: '#8B5CF6' },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      fontFamily: {
+        audiowide: ['Audiowide', 'cursive'],
+        'roboto-mono': ['"Roboto Mono"', 'monospace'],
       },
     },
   },
