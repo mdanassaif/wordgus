@@ -20,7 +20,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartGame }) => {
   const title = "WordGus"
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 text-white font-sans overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 text-white font-sans overflow-hidden px-4 py-8 sm:px-6 sm:py-12">
      <nav className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50">
   <div className="text-2xl font-bold">
   <Link href="https://www.sololearn.com/en/profile/21397794" target="_blank" rel="noopener noreferrer">
@@ -40,10 +40,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartGame }) => {
   </div>
 </nav>
 
-      <main className="flex flex-col items-center justify-center min-h-screen relative">
+<main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] relative">
         <div className="text-center z-10">
           <motion.h1 
-            className="text-7xl md:text-9xl font-extrabold mb-8"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-extrabold mb-4 sm:mb-8"
             initial="hidden"
             animate="visible"
             transition={{ staggerChildren: 0.1 }}
@@ -63,7 +63,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartGame }) => {
             ))}
           </motion.h1>
           <motion.p 
-            className="text-xl md:text-2xl mb-12 text-gray-300"
+            className="text-lg sm:text-xl md:text-2xl mb-8 sm:mb-12 text-gray-300"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
@@ -76,7 +76,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartGame }) => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={onStartGame}
-          className="p-6 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-4xl font-bold rounded-full shadow-lg relative overflow-hidden z-10 group"
+         className="p-4 sm:p-6 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-3xl sm:text-4xl font-bold rounded-full shadow-lg relative overflow-hidden z-10 group"
           aria-label="Play"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,19 +107,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartGame }) => {
                 <FaInfoCircle className="mr-2" /> About WordGus
               </motion.button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px] bg-gray-900 text-white border-purple-500">
+            <DialogContent className="sm:max-w-[90%] md:max-w-[500px] bg-gray-900 text-white border-purple-500 max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-500">About WordGus</DialogTitle>
               </DialogHeader>
-              <div className="mt-6 space-y-4">
-                <Image 
-                  src="/Designer.png" 
-                  alt="WordGus Game Preview" 
-                  width={500}
-                  height={281}
-                  className="w-full h-auto rounded-lg shadow-md"
-                />
-                <p className="text-gray-300">WordGus is an exhilarating word-decoding challenge that puts your vocabulary and quick thinking to the test. With 6 attempts and a 150-second countdown, can you unveil the hidden word?</p>
+              <div className="mt-4 sm:mt-6 space-y-2 sm:space-y-4">
+    <Image 
+      src="/Designer.png" 
+      alt="WordGus Game Preview" 
+      width={500}
+      height={281}
+      className="w-full h-auto rounded-lg shadow-md"
+    />
+    <p className="text-sm sm:text-base text-gray-300">WordGus is an exhilarating word-decoding challenge that puts your vocabulary and quick thinking to the test. With 6 attempts and a 150-second countdown, can you unveil the hidden word?</p>
                 <div>
                   <h3 className="text-xl font-semibold mb-2 text-purple-400">How to Play:</h3>
                   <ul className="list-disc list-inside text-gray-300 space-y-1">
