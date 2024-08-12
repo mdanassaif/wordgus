@@ -23,7 +23,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartGame }) => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 text-white font-sans overflow-hidden px-4 py-8 sm:px-6 sm:py-12">
      <nav className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50">
   <div className="text-2xl font-bold">
-  <Link href="https://www.sololearn.com/en/profile/21397794" target="_blank" rel="noopener noreferrer">
+  <Link href="https://www.sololearn.com/en/profile/21397794/?ref=app" target="_blank" rel="noopener noreferrer">
     <Image
       src="/profile.png"
       alt="Logo"
@@ -119,25 +119,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartGame }) => {
       height={281}
       className="w-full h-auto rounded-lg shadow-md"
     />
-    <p className="text-sm sm:text-base text-gray-300">WordGus is an exhilarating word-decoding challenge that puts your vocabulary and quick thinking to the test. With 6 attempts and a 150-second countdown, can you unveil the hidden word?</p>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2 text-purple-400">How to Play:</h3>
-                  <ul className="list-disc list-inside text-gray-300 space-y-1">
-                    <li>Green: Letter is perfectly placed</li>
-                    <li>Yellow: Letter is present but misplaced</li>
-                    <li>Gray: Letter is absent from the word</li>
-                  </ul>
-                </div>
+    <p className="text-sm sm:text-base text-gray-300">WordGus is simple game just guess the word within 6 attempts and a 150-second.</p>
+                
                 <div>
                   <h3 className="text-xl font-semibold mb-2 text-purple-400">Key Features:</h3>
                   <ul className="list-disc list-inside text-gray-300 space-y-1">
-                    <li>Intelligent hint system for those tough moments</li>
-                    <li>Immersive background music to enhance focus</li>
+                    <li>Hint system during tough moments</li>
+                    <li>Background music for more feel</li>
                     <li>Compete on global leaderboards</li>
                     <li>Customizable light/dark modes</li>
                   </ul>
                 </div>
-                <p className="text-gray-300 italic">Immerse yourself in WordGus - where words come alive and every second counts.</p>
+                <p className="text-gray-300 italic">Just click on music icon , dark mode and Enjoy.</p>
               </div>
             </DialogContent>
           </Dialog>
