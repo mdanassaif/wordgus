@@ -34,7 +34,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartGame }) => {
         </Link>
   </div>
   <div className="flex space-x-4">
-    <Link href="https://github.com/Nextjswebdev" target="_blank" rel="noopener noreferrer">
+    <Link href="https://github.com/mdanassaif" target="_blank" rel="noopener noreferrer">
       <FaGithub className="text-xl hover:text-pink-500 cursor-pointer transition-colors w-[2rem] h-[2rem]" />
     </Link>
   </div>
